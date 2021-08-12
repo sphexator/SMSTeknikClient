@@ -19,7 +19,4 @@ var msg = new SMSMessage
 }; 
 
 var response = await client.SendMsg(msg); 
-if( response.Success ) {
-// You can check for status, delivery reports etc on the response
-}
-
+// You can check for status, delivery reports, failure details etc on the response
