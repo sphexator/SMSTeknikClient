@@ -4,11 +4,12 @@
 
 Step 1: 
 
->nuget install SMSTeknikClient
+`nuget install SMSTeknikClient`
 
 
 Step 2: 
 
+```
 var msg = new SMSMessage 
 {
    From = "+234234", 
