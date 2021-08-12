@@ -4,17 +4,22 @@
 
 Step 1: 
 
-`nuget install SMSTeknikClient`
+`nuget Install-Package SMSTeknikClient`
 
 
 Step 2: 
 
 ```
+var client = SMSTeknikClient.CreateClient( myUserId, myUserPassword ); 
 var msg = new SMSMessage 
 {
-   From = "+234234", 
    To = "+2134", 
+   Text = "Hello, World!",
+   // You can specify lots of other stuff here! See documentation for details. 
 }; 
 
-await SMSTeknickClient.SendMsg(msg); 
+var response = await client.SendMsg(msg); 
+if( response.Success ) {
+// You can check for status, delivery reports etc on the response
+}
 
