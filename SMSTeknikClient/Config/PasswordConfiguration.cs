@@ -6,7 +6,11 @@ namespace SMSTeknikClient.Config;
 ///
 /// Typically bound from a configuration file during startup. 
 /// </summary>
-public class SmsTeknikConfiguration
+public class PasswordConfiguration
 {
+    public string Company { get; set; }
     
+    public string UserName { get; set; }
+    
+    public string Password { get; set; }
 }

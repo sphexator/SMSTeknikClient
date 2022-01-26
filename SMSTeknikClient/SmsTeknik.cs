@@ -5,6 +5,6 @@ namespace SMSTeknikClient;
 
 public static class SmsTeknik
 {
-    public static ISmsTeknikClient CreateClient(SmsTeknikConfiguration config) =>
+    public static ISmsTeknikClient CreateClient(ISmsTeknikConfiguration config) =>
         new SmsTeknikXmlClient(config);
 }
