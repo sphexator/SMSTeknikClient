@@ -1,6 +1,7 @@
 using System.Xml;
 using SMSTeknikClient.Config;
 using SMSTeknikClient.Messages;
+using XE = System.Xml.Linq.XElement;
 
 namespace SMSTeknikClient.ClientImplementation;
 
@@ -33,27 +34,53 @@ public class SmsTeknikXmlClient : ISmsTeknikClient
     public Task<SendResponse> SendMessages(params OutgoingSmsMessage[] messages) =>
         SendRequest(new SendRequest(messages));
 
-    public Task<SendResponse> SendRequest(SendRequest sendRequest)
+    public async Task<SendResponse> SendRequest(SendRequest sendRequest)
     {
-        XmlWriterSettings writerSettings = new XmlWriterSettings
-        {
-            OmitXmlDeclaration = true,
-            ConformanceLevel = ConformanceLevel.Fragment,
-            CloseOutput = false
-        };
+        XE xmlItems;
 
-        MemoryStream localMemoryStream = new MemoryStream();  
-        using XmlWriter writer = XmlWriter.Create(localMemoryStream, writerSettings);
+        var req = sendRequest.OutgoingSmsMessages.First();
         
-        writer.WriteStartElement("message");  
-        writer.WriteElementString("title", "Graphics Programming using GDI+");  
-        writer.WriteElementString("author", "Mahesh Chand");  
-        writer.WriteElementString("publisher", "Addison-Wesley");  
-        writer.WriteElementString("price", "64.95");  
-        writer.WriteEndElement();  
-        writer.Flush();
+        var xml = new XE("sms-teknik",
+            new XE("operationtype", 0),
+            new XE("smssender", req.From),
+            new XE("multisms", 1),
+            new XE("maxmultisms", 0),
+            new XE("send_date", ""),
+            new XE("send_time", ""),
+            new XE("udmessage", req.Body),
+            xmlItems = new XE("items")
+        );
 
+        if (!string.IsNullOrEmpty(req.StatusCallBackUrl))
+            xml.Add(new XE("deliverystatustype", "3"),
+                new XE("deliverystatusaddress", req.StatusCallBackUrl));
+
+        xmlItems.Add(sendRequest.OutgoingSmsMessages.Select(outgoingMessage => new XE("recipient", new XE("nr", outgoingMessage.To))));
+
+        // TODO: get from config
+        var Username = "";
+        var Password = "";
+
+        _client.DefaultRequestHeaders.Add("Authorization", $"Basic {Base64Encode($"{Username}:{Password}")}");
+
+
+        var responseMessage = await _client.PostAsync("https://api.smsteknik.se/send/xml/", 
+            new StringContent(xml.ToString(), System.Text.Encoding.UTF8, "application/xml"));
+
+        string result;
+
+        if(responseMessage.IsSuccessStatusCode)
+            result = await responseMessage.Content.ReadAsStringAsync();
+
+        // Todo: handle result.
 
         throw new NotImplementedException();
+    }
+
+    // Move this method to a helper class
+    private  string Base64Encode(string textToEncode)
+    {
+        byte[] textAsBytes = System.Text.Encoding.UTF8.GetBytes(textToEncode);
+        return Convert.ToBase64String(textAsBytes);
     }
 }
