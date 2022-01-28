@@ -70,19 +70,6 @@ public class SmsTeknikXmlClient : ISmsTeknikClient
         else
             throw new Exception("The HTTP request was not successful!");
 
-        // check for generic errors that applies for the entire request (not for a single number)
-        switch(result)
-        {
-            case "":
-                throw new Exception("Invalid request");
-
-            case "0:Access denied":
-                throw new Exception("Access denied. Check your credentials.");
-
-            case "0:No Valid recipients":
-                throw new Exception("No valid recipients");
-        }
-
         
         return ParseResult(result, sendRequest.OutgoingSmsMessages);
 
