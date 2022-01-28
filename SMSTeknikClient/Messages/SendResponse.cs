@@ -23,4 +23,5 @@ public class SendResponse
     public bool Success => MessageResponses.All(r => r.Success);
 
     public MessageResponse[] MessageResponses { get; }
+
 }

@@ -63,14 +63,79 @@ public class SmsTeknikXmlClient : ISmsTeknikClient
         var responseMessage = await _client.PostAsync("https://api.smsteknik.se/send/xml/", 
             new StringContent(xml.ToString(), System.Text.Encoding.UTF8, "application/xml"));
 
-        string result;
+        string result = "";
 
-        if(responseMessage.IsSuccessStatusCode)
+        if (responseMessage.IsSuccessStatusCode)
             result = await responseMessage.Content.ReadAsStringAsync();
+        else
+            throw new Exception("The HTTP request was not successful!");
 
-        // Todo: handle result.
+        // check for generic errors that applies for the entire request (not for a single number)
+        switch(result)
+        {
+            case "":
+                throw new Exception("Invalid request");
 
-        throw new NotImplementedException();
+            case "0:Access denied":
+                throw new Exception("Access denied. Check your credentials.");
+
+            case "0:No Valid recipients":
+                throw new Exception("No valid recipients");
+        }
+
+        
+        return ParseResult(result, sendRequest.OutgoingSmsMessages);
+
+
+    }
+
+    private SendResponse ParseResult(string result, OutgoingSmsMessage[] outgoingSmsMessages)
+    {
+
+        var arrResult = result.Split(';');
+
+        if(outgoingSmsMessages.Length > 1 && arrResult.Length == 1)
+        {
+            // We expected to receive multiple response codes (one for each message), but we only receive one.
+            // This means that the entire request failed (eg. wrong credentials, parse error or quota exceeded).
+            // We have two options: 1) throw exception, or 2) populate the same error message for each of the message response.
+            // This scenario only applies when sending to multiple receivers.
+            // Example error codes: 0:Access denied, 0:No Valid recipients
+            
+            throw new Exception("Error: " + arrResult.First().Substring(2));
+        }
+        
+        if (outgoingSmsMessages.Length != arrResult.Length)
+            throw new Exception("This should not have happened...");
+        
+        var messageResponses = new MessageResponse[outgoingSmsMessages.Length];
+
+        for (int i = 0;i<messageResponses.Length; i++)
+        {
+            var resultItem = arrResult[i];
+
+            bool success;
+            string? errorMessage = null;
+            long? smsId = null;
+
+            if (resultItem.StartsWith("0:"))
+            {
+                // Error
+                success = false;
+                errorMessage = resultItem.Substring(2);
+            }
+            else
+            {
+                // Success
+                success = true;
+                long smsid = Convert.ToInt64(resultItem);
+            }
+
+            messageResponses[i] = new MessageResponse(outgoingSmsMessages[i], success, errorMessage, smsId);
+        }
+
+        return new SendResponse(messageResponses);
+
     }
 
     // Move this method to a helper class

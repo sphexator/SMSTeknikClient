@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using SMSTeknikClient.Messages;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SMSTeknikClient.Tests;
 
@@ -12,14 +13,14 @@ public class Tests
     }
 
     [Test]
-    public async System.Threading.Tasks.Task TestSendSingleMessage()
+    public async Task TestSendSingleMessage()
     {
         var client = SmsTeknik.CreateClient(
             new Config.SmsTeknikConfiguration(username: "username", password: "password"));
 
         var msg = new OutgoingSmsMessage
         {
-            To = "+47123",
+            To = "+4790000001",
             From = "Test",
             Body = "Hello, World!",
             // You can specify lots of other stuff here! See documentation for details. 
@@ -28,10 +29,13 @@ public class Tests
         var response = await client.SendMessage(msg);
         // You can check for status, delivery reports, failure details etc on the response
 
+        Assert.IsTrue(response.Success);
+        Assert.IsTrue(response.OutgoingSmsMessage.To == msg.To);
+
     }
 
     [Test]
-    public async void TestSendMultipleMessages()
+    public async Task TestSendMultipleMessages()
     {
         var client = SmsTeknik.CreateClient(
             new Config.SmsTeknikConfiguration(username: "username", password: "password"));
@@ -43,9 +47,12 @@ public class Tests
             // You can specify lots of other stuff here! See documentation for details. 
         };
 
-        var receivers = new string[] { "+47123", "+47123" };
+        var receivers = new string[] { "+4790000001", "+4790000002" };
 
         var response = await client.SendMessageToMultipleRecipients(msg, receivers);
 
+        Assert.IsTrue(response.Success);
+        Assert.IsTrue(response.MessageResponses.Length == receivers.Length);
+        Assert.IsTrue(response.MessageResponses[0].OutgoingSmsMessage.To == receivers[0]);
     }
 }
