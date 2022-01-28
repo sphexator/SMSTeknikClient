@@ -1,6 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMSTeknikClient", "SMSTeknikClient\SMSTeknikClient.csproj", "{F7E78C12-541B-4E8E-B128-BEC95410B08C}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SMSTeknikClient", "SMSTeknikClient\SMSTeknikClient.csproj", "{F7E78C12-541B-4E8E-B128-BEC95410B08C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMSTeknikClient.Tests", "SMSTeknikClient.Tests\SMSTeknikClient.Tests.csproj", "{4B3D218D-699F-4C63-9A79-E16931CEEF0A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,5 +17,15 @@ Global
 		{F7E78C12-541B-4E8E-B128-BEC95410B08C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7E78C12-541B-4E8E-B128-BEC95410B08C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F7E78C12-541B-4E8E-B128-BEC95410B08C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B3D218D-699F-4C63-9A79-E16931CEEF0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B3D218D-699F-4C63-9A79-E16931CEEF0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B3D218D-699F-4C63-9A79-E16931CEEF0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B3D218D-699F-4C63-9A79-E16931CEEF0A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3A55190E-FDA2-4E4C-B3D4-586B01B79EB9}
 	EndGlobalSection
 EndGlobal
