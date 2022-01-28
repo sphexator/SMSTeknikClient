@@ -10,9 +10,9 @@ public class SmsTeknikXmlClient : ISmsTeknikClient
 
     private static HttpClient _client = new HttpClient();
     
-    private readonly ISmsTeknikConfiguration _config;
+    private readonly SmsTeknikConfiguration _config;
 
-    public SmsTeknikXmlClient(ISmsTeknikConfiguration config) => _config = config;
+    public SmsTeknikXmlClient(SmsTeknikConfiguration config) => _config = config;
 
     void IDisposable.Dispose() => 
         GC.SuppressFinalize(this);
@@ -57,11 +57,7 @@ public class SmsTeknikXmlClient : ISmsTeknikClient
 
         xmlItems.Add(sendRequest.OutgoingSmsMessages.Select(outgoingMessage => new XE("recipient", new XE("nr", outgoingMessage.To))));
 
-        // TODO: get from config
-        var Username = "";
-        var Password = "";
-
-        _client.DefaultRequestHeaders.Add("Authorization", $"Basic {Base64Encode($"{Username}:{Password}")}");
+        _client.DefaultRequestHeaders.Add("Authorization", $"Basic {Base64Encode($"{_config.Username}:{_config.Password}")}");
 
 
         var responseMessage = await _client.PostAsync("https://api.smsteknik.se/send/xml/", 
