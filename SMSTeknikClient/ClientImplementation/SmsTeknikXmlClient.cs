@@ -36,6 +36,13 @@ public class SmsTeknikXmlClient : ISmsTeknikClient
 
     public async Task<SendResponse> SendRequest(SendRequest sendRequest)
     {
+        // Validate required paramters
+        if (sendRequest.OutgoingSmsMessages.Length == 0 || 
+            sendRequest.OutgoingSmsMessages.Any(i => string.IsNullOrEmpty(i.Body)) ||
+            sendRequest.OutgoingSmsMessages.Any(i => string.IsNullOrEmpty(i.From)) ||
+            sendRequest.OutgoingSmsMessages.Any(i => string.IsNullOrEmpty(i.To)))
+            throw new Exception("Required parameter is missing");
+
         XE xmlItems;
 
         var req = sendRequest.OutgoingSmsMessages.First();

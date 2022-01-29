@@ -17,7 +17,7 @@ public class Tests
     {
         var client = SmsTeknik.CreateClient(
             new Config.SmsTeknikConfiguration(username: "username", password: "password"));
-
+        
         var msg = new OutgoingSmsMessage
         {
             To = "+4790000001",
@@ -31,7 +31,7 @@ public class Tests
 
         Assert.IsTrue(response.Success);
         Assert.IsTrue(response.OutgoingSmsMessage.To == msg.To);
-
+        
     }
 
     [Test]
