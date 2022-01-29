@@ -9,7 +9,7 @@ Step 1:
 
 Step 2: 
 
-```
+```csharp
 var client = SmsTeknik.CreateClient(new Config.SmsTeknikConfiguration(myUserName, myPassword));
         
 var msg = new OutgoingSmsMessage
