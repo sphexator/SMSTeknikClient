@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Xml;
 using SMSTeknikClient.Config;
 using SMSTeknikClient.Messages;
@@ -52,8 +53,8 @@ public class SmsTeknikXmlClient : ISmsTeknikClient
             new XE("smssender", req.From),
             new XE("multisms", 1),
             new XE("maxmultisms", 0),
-            new XE("send_date", ""),
-            new XE("send_time", ""),
+            new XE("send_date", req.SendAt?.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture) ?? ""),
+            new XE("send_time", req.SendAt?.ToString("HH:dd:ss", CultureInfo.InvariantCulture) ?? ""),
             new XE("udmessage", req.Body),
             xmlItems = new XE("items")
         );
