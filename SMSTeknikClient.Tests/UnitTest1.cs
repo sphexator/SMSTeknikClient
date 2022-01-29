@@ -30,8 +30,8 @@ public class Tests
         // You can check for status, delivery reports, failure details etc on the response
 
         Assert.IsTrue(response.Success);
+        Assert.IsTrue(response.SmsId > 0);
         Assert.IsTrue(response.OutgoingSmsMessage.To == msg.To);
-        
     }
 
     [Test]

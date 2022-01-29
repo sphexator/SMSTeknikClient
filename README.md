@@ -10,13 +10,20 @@ Step 1:
 Step 2: 
 
 ```
-var client = SMSTeknikClient.CreateClient( myUserId, myUserPassword ); 
-var msg = new SMSMessage 
+var client = SmsTeknik.CreateClient(new Config.SmsTeknikConfiguration(myUserName, myPassword));
+        
+var msg = new OutgoingSmsMessage
 {
-   To = "+2134", 
-   Text = "Hello, World!",
-   // You can specify lots of other stuff here! See documentation for details. 
-}; 
+    To = "+4790000001",
+    From = "Test",
+    Body = "Hello, World!",
+    // You can specify lots of other stuff here! See documentation for details. 
+};
 
-var response = await client.SendMsg(msg); 
+var response = await client.SendMessage(msg);
+
 // You can check for status, delivery reports, failure details etc on the response
+if(response.Success)
+    Console.WriteLine($"Your message id {response.SmsId}");
+else
+    Console.WriteLine($"Failed with reason: {response.ErrorMessage}");
