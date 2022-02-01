@@ -46,12 +46,12 @@ public class Tests
     public async Task TestSendMultipleMessages()
     {
         var client = SmsTeknik.CreateClient(
-            new SmsTeknikConfiguration(Username: "username", Password: "password"));
+            new SmsTeknikConfiguration(Username: _configuration["username"], Password: _configuration["password"]));
 
         var msg = new OutgoingSmsMessage
         {
             Body = "Hey, Y'all!",
-            From = "Test",
+            From = _configuration["from"],
             // You can specify lots of other stuff here! See documentation for details. 
         };
 
