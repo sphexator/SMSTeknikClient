@@ -63,4 +63,12 @@ public class Tests
         IsTrue(response.MessageResponses.Length == receivers.Length);
         IsTrue(response.MessageResponses[0].OutgoingSmsMessage.To == receivers[0]);
     }
+
+    [Test]
+    public void TestCalculateMessageParts()
+    {
+        var messageParts = ClientImplementation.Utils.CalculateMessageParts("".PadRight(170));
+
+        IsTrue(messageParts == 2);
+    }
 }

@@ -5,7 +5,17 @@
       "ProjectGuid": "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3",
       "DisplayName": "Miscellaneous Files",
       "ColorIndex": -1
+    },
+    "f7e78c12-541b-4e8e-b128-bec95410b08c": {
+      "ProjectGuid": "f7e78c12-541b-4e8e-b128-bec95410b08c",
+      "DisplayName": "SMSTeknikClient",
+      "ColorIndex": 0
+    },
+    "4b3d218d-699f-4c63-9a79-e16931ceef0a": {
+      "ProjectGuid": "4b3d218d-699f-4c63-9a79-e16931ceef0a",
+      "DisplayName": "SMSTeknikClient.Tests",
+      "ColorIndex": 1
     }
   },
-  "NextColorIndex": 0
+  "NextColorIndex": 2
 }
