@@ -38,11 +38,6 @@ public class SmsTeknikXmlClient : ISmsTeknikClient
         if (validationErrors.Any())
             throw new ArgumentException("Invalid SMS send request: " + string.Join(", ", validationErrors));
 
-        if (sendRequest.OutgoingSmsMessages.Length > 1)
-        {
-            throw new NotImplementedException("Not yet implemented: Multiple recipients");
-        }
-
         XE xmlItems = new XE("items");
 
         var req = sendRequest.OutgoingSmsMessages.First();

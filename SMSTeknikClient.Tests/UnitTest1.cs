@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
@@ -16,19 +18,22 @@ public class Tests
             .AddJsonFile("appsettings.local.json", false)
             .Build();
 
+    private ISmsTeknikClient CreateClient() => SmsTeknik.CreateClient(new SmsTeknikConfiguration(
+        _configuration["username"], _configuration["password"]));
+
     [SetUp]
     public void Setup() => _configuration = InitConfiguration();
 
     [Test]
     public async Task TestSendSingleMessage()
     {
-        var config = new SmsTeknikConfiguration(Username: _configuration["username"], Password: _configuration["password"]);
-        var client = SmsTeknik.CreateClient(config);
+        var client = CreateClient();
+        var recipients = _configuration.GetSection("to").Get<IList<string>>();
 
         // TODO: Load actual test configuration from a non-git-committed file. 
         var msg = new OutgoingSmsMessage
         {
-            To = _configuration["To"],
+            To = recipients.First(),
             From = _configuration["from"],
             Body = "Hello, World!",
             // You can specify lots of other stuff here! See documentation for details. 
@@ -45,23 +50,21 @@ public class Tests
     [Test]
     public async Task TestSendMultipleMessages()
     {
-        var client = SmsTeknik.CreateClient(
-            new SmsTeknikConfiguration(Username: _configuration["username"], Password: _configuration["password"]));
+        var client = CreateClient();
+        var recipients = _configuration.GetSection("to").Get<string[]>();
 
         var msg = new OutgoingSmsMessage
         {
-            Body = "Hey, Y'all!",
             From = _configuration["from"],
+            Body = "Hi there! Please ignore this message. ",
             // You can specify lots of other stuff here! See documentation for details. 
         };
 
-        var receivers = new[] { "+4790000001", "+4790000002" };
-
-        var response = await client.SendMessageToMultipleRecipients(msg, receivers);
+        var response = await client.SendMessageToMultipleRecipients(msg, recipients);
 
         IsTrue(response.Success);
-        IsTrue(response.MessageResponses.Length == receivers.Length);
-        IsTrue(response.MessageResponses[0].OutgoingSmsMessage.To == receivers[0]);
+        IsTrue(response.MessageResponses.Length == recipients.Length);
+        IsTrue(response.MessageResponses[0].OutgoingSmsMessage.To == recipients[0]);
     }
 
     [Test]
