@@ -4,14 +4,9 @@ namespace SMSTeknikClient.Messages;
 /// This class represents the response received
 /// from the SMS teknik server when sending one or more SMS messages. 
 /// </summary>
-public class SendResponse
+public record SendResponse(MessageResponse[] MessageResponses)
 {
     public bool Success => MessageResponses.All(r => r.Success);
-
-    public MessageResponse[] MessageResponses { get; init; }
-
-    public SendResponse(MessageResponse[] messageResponses) =>
-        MessageResponses = messageResponses;
 
     /// <summary>
     /// This method throws an exception if not all of the messages

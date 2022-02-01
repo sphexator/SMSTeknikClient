@@ -1,28 +1,35 @@
-using NUnit.Framework;
-using SMSTeknikClient.Messages;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using NUnit.Framework;
+using SMSTeknikClient.Config;
+using SMSTeknikClient.Messages;
+using static NUnit.Framework.Assert;
 
 namespace SMSTeknikClient.Tests;
 
 public class Tests
 {
+    private IConfiguration _configuration = null!;
+
+    public static IConfiguration InitConfiguration() =>
+        new ConfigurationBuilder()
+            .AddJsonFile("appsettings.local.json", false)
+            .Build();
+
     [SetUp]
-    public void Setup()
-    {
-    }
+    public void Setup() => _configuration = InitConfiguration();
 
     [Test]
     public async Task TestSendSingleMessage()
     {
-        var client = SmsTeknik.CreateClient(
-            new Config.SmsTeknikConfiguration(username: "username", password: "password"));
+        var config = new SmsTeknikConfiguration(Username: _configuration["username"], Password: _configuration["password"]);
+        var client = SmsTeknik.CreateClient(config);
 
         // TODO: Load actual test configuration from a non-git-committed file. 
-        var msg = new OutgoingSmsMessage()
+        var msg = new OutgoingSmsMessage
         {
-            // To = "+4790000001",
-            To = "+4741915331",
-            From = "Test",
+            To = _configuration["To"],
+            From = _configuration["from"],
             Body = "Hello, World!",
             // You can specify lots of other stuff here! See documentation for details. 
         };
@@ -30,16 +37,16 @@ public class Tests
         var response = await client.SendMessage(msg);
         // You can check for status, delivery reports, failure details etc on the response
 
-        Assert.IsTrue(response.Success, "response.Success" + "; Errors: " + response.ErrorMessage);
-        Assert.IsTrue(response.SmsId > 0);
-        Assert.IsTrue(response.OutgoingSmsMessage.To == msg.To);
+        IsTrue(response.Success, "response.Success" + "; Errors: " + response.ErrorMessage);
+        IsTrue(response.SmsId > 0);
+        IsTrue(response.OutgoingSmsMessage.To == msg.To);
     }
 
     [Test]
     public async Task TestSendMultipleMessages()
     {
         var client = SmsTeknik.CreateClient(
-            new Config.SmsTeknikConfiguration(username: "username", password: "password"));
+            new SmsTeknikConfiguration(Username: "username", Password: "password"));
 
         var msg = new OutgoingSmsMessage
         {
@@ -52,8 +59,8 @@ public class Tests
 
         var response = await client.SendMessageToMultipleRecipients(msg, receivers);
 
-        Assert.IsTrue(response.Success);
-        Assert.IsTrue(response.MessageResponses.Length == receivers.Length);
-        Assert.IsTrue(response.MessageResponses[0].OutgoingSmsMessage.To == receivers[0]);
+        IsTrue(response.Success);
+        IsTrue(response.MessageResponses.Length == receivers.Length);
+        IsTrue(response.MessageResponses[0].OutgoingSmsMessage.To == receivers[0]);
     }
 }

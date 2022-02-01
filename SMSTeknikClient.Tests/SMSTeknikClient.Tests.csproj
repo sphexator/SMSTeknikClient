@@ -18,4 +18,10 @@
     <ProjectReference Include="..\SMSTeknikClient\SMSTeknikClient.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="appsettings.local.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

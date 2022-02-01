@@ -1,23 +1,7 @@
 namespace SMSTeknikClient.Messages;
 
-public class MessageResponse
+public record MessageResponse(OutgoingSmsMessage OutgoingSmsMessage, bool Success, string? ErrorMessage, long? SmsId)
 {
-    public OutgoingSmsMessage OutgoingSmsMessage { get; init; }
-
-    public bool Success { get; init; }
-
-    public string? ErrorMessage { get; init; }
-
-    public long? SmsId { get; init; }
-
-    public MessageResponse(OutgoingSmsMessage message, bool success, string? errorMessage, long? smsId)
-    {
-        OutgoingSmsMessage = message;
-        Success = success;
-        ErrorMessage = errorMessage;
-        SmsId = smsId;
-    }
-
     /// <summary>
     /// This method throws an exception if not all of the messages
     /// were sent successfully. Useful as simple check to ensure

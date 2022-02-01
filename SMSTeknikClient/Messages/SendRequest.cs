@@ -6,10 +6,4 @@ namespace SMSTeknikClient.Messages;
 ///
 /// Currently no other parameters are defined. 
 /// </summary>
-public class SendRequest
-{
-    public SendRequest(params OutgoingSmsMessage[] outgoingSmsMessages) =>
-        OutgoingSmsMessages = outgoingSmsMessages;
-
-    public OutgoingSmsMessage[] OutgoingSmsMessages { get; init; }
-}
+public record SendRequest(params OutgoingSmsMessage[] OutgoingSmsMessages);

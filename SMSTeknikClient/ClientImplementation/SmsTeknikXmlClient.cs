@@ -1,7 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
+using System.Text;
 using SMSTeknikClient.Config;
 using SMSTeknikClient.Messages;
+using static System.Globalization.CultureInfo;
 using static SMSTeknikClient.ClientImplementation.Validation;
 using XE = System.Xml.Linq.XElement;
 
@@ -23,12 +24,7 @@ public class SmsTeknikXmlClient : ISmsTeknikClient
 
     public Task<SendResponse> SendMessageToMultipleRecipients(OutgoingSmsMessage message, string[] toMultipleRecipients)
     {
-        var l = toMultipleRecipients.Select(x =>
-        {
-            var m = message.Clone();
-            m.To = x;
-            return m;
-        }).ToArray();
+        var l = toMultipleRecipients.Select(message.WithTo).ToArray();
         return Send(new SendRequest(l));
     }
 
@@ -49,15 +45,15 @@ public class SmsTeknikXmlClient : ISmsTeknikClient
 
         XE xmlItems = new XE("items");
 
-        var req = sendRequest.OutgoingSmsMessages.Single();
+        var req = sendRequest.OutgoingSmsMessages.First();
 
         var xml = new XE("sms-teknik",
             new XE("operationtype", 0),
             new XE("smssender", req.From),
             new XE("multisms", 1),
             new XE("maxmultisms", 0),
-            new XE("send_date", req.SendAt?.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture) ?? ""),
-            new XE("send_time", req.SendAt?.ToString("HH:dd:ss", CultureInfo.InvariantCulture) ?? ""),
+            new XE("send_date", req.SendAt?.ToString("yyyy-MM-dd", InvariantCulture) ?? ""),
+            new XE("send_time", req.SendAt?.ToString("HH:dd:ss", InvariantCulture) ?? ""),
             new XE("udmessage", req.Body),
             xmlItems
         );
@@ -70,7 +66,7 @@ public class SmsTeknikXmlClient : ISmsTeknikClient
 
         Client.DefaultRequestHeaders.Add("Authorization", $"Basic {Utils.Base64Encode($"{_config.Username}:{_config.Password}")}");
 
-        using var content = new StringContent(xml.ToString(), System.Text.Encoding.UTF8, "application/xml");
+        using var content = new StringContent(xml.ToString(), Encoding.UTF8, "application/xml");
         using var responseMessage = await Client.PostAsync("https://api.smsteknik.se/send/xml/", content);
         responseMessage.EnsureSuccessStatusCode();
         var result = await responseMessage.Content.ReadAsStringAsync();
@@ -94,7 +90,7 @@ public class SmsTeknikXmlClient : ISmsTeknikClient
         }
 
         if (outgoingSmsMessages.Length != arrResult.Length)
-            throw new Exception("This should not have happened...");
+            throw new Exception($"Message length mismatch: {outgoingSmsMessages.Length} != {arrResult.Length}...");
 
         var messageResponses = new MessageResponse[outgoingSmsMessages.Length];
 
@@ -110,7 +106,7 @@ public class SmsTeknikXmlClient : ISmsTeknikClient
             {
                 // Error
                 success = false;
-                errorMessage = resultItem.Substring(2);
+                errorMessage = resultItem[2..];
             }
             else
             {
