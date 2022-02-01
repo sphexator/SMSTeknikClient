@@ -4,9 +4,6 @@ namespace SMSTeknikClient.ClientImplementation;
 
 public class Utils
 {
-    public static string Base64Encode(string textToEncode)
-    {
-        var textAsBytes = Encoding.UTF8.GetBytes(textToEncode);
-        return Convert.ToBase64String(textAsBytes);
-    }
+    public static string Base64Encode(string textToEncode) => 
+        Convert.ToBase64String(Encoding.UTF8.GetBytes(textToEncode));
 }
