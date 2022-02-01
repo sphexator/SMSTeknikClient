@@ -6,6 +6,10 @@ namespace SMSTeknikClient.Messages;
 /// </summary>
 public class SendResponse
 {
+    public bool Success => MessageResponses.All(r => r.Success);
+
+    public MessageResponse[] MessageResponses { get; init; }
+
     public SendResponse(MessageResponse[] messageResponses) =>
         MessageResponses = messageResponses;
 
@@ -19,9 +23,4 @@ public class SendResponse
     {
         if (!Success) throw new AggregateException("One or more messages failed. Check individual messages for details. ");
     }
-    
-    public bool Success => MessageResponses.All(r => r.Success);
-
-    public MessageResponse[] MessageResponses { get; }
-
 }

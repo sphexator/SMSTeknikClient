@@ -8,8 +8,8 @@ namespace SMSTeknikClient.Messages;
 /// </summary>
 public class SendRequest
 {
-    public SendRequest(params OutgoingSmsMessage[] outgoingSmsMessages) => 
+    public SendRequest(params OutgoingSmsMessage[] outgoingSmsMessages) =>
         OutgoingSmsMessages = outgoingSmsMessages;
 
-    public OutgoingSmsMessage[] OutgoingSmsMessages { get; }
+    public OutgoingSmsMessage[] OutgoingSmsMessages { get; init; }
 }

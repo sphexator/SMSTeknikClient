@@ -13,5 +13,5 @@ public interface ISmsTeknikClient : IDisposable
 
     public Task<SendResponse> SendMessages(params OutgoingSmsMessage[] messages);
 
-    public Task<SendResponse> SendRequest(SendRequest sendRequest);
+    public Task<SendResponse> Send(SendRequest sendRequest);
 }

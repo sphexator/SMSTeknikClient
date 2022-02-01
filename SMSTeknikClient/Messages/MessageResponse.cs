@@ -2,6 +2,14 @@ namespace SMSTeknikClient.Messages;
 
 public class MessageResponse
 {
+    public OutgoingSmsMessage OutgoingSmsMessage { get; init; }
+
+    public bool Success { get; init; }
+
+    public string? ErrorMessage { get; init; }
+
+    public long? SmsId { get; init; }
+
     public MessageResponse(OutgoingSmsMessage message, bool success, string? errorMessage, long? smsId)
     {
         OutgoingSmsMessage = message;
@@ -9,14 +17,6 @@ public class MessageResponse
         ErrorMessage = errorMessage;
         SmsId = smsId;
     }
-
-    public OutgoingSmsMessage OutgoingSmsMessage { get; }
-
-    public bool Success { get; }
-
-    public string? ErrorMessage { get; }
-
-    public long? SmsId { get; set; }
 
     /// <summary>
     /// This method throws an exception if not all of the messages
@@ -26,7 +26,6 @@ public class MessageResponse
     /// </summary>
     public void EnsureSuccess()
     {
-        if (!Success) throw new AggregateException("Sending the message failed. Check the error message for details. ");
+        if (!Success) throw new AggregateException("One or more of the messages failed. Check the error message for details. ");
     }
-    
 }

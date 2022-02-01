@@ -1,6 +1,5 @@
 using NUnit.Framework;
 using SMSTeknikClient.Messages;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SMSTeknikClient.Tests;
@@ -17,10 +16,12 @@ public class Tests
     {
         var client = SmsTeknik.CreateClient(
             new Config.SmsTeknikConfiguration(username: "username", password: "password"));
-        
-        var msg = new OutgoingSmsMessage
+
+        // TODO: Load actual test configuration from a non-git-committed file. 
+        var msg = new OutgoingSmsMessage()
         {
-            To = "+4790000001",
+            // To = "+4790000001",
+            To = "+4741915331",
             From = "Test",
             Body = "Hello, World!",
             // You can specify lots of other stuff here! See documentation for details. 
@@ -29,7 +30,7 @@ public class Tests
         var response = await client.SendMessage(msg);
         // You can check for status, delivery reports, failure details etc on the response
 
-        Assert.IsTrue(response.Success);
+        Assert.IsTrue(response.Success, "response.Success" + "; Errors: " + response.ErrorMessage);
         Assert.IsTrue(response.SmsId > 0);
         Assert.IsTrue(response.OutgoingSmsMessage.To == msg.To);
     }
@@ -47,7 +48,7 @@ public class Tests
             // You can specify lots of other stuff here! See documentation for details. 
         };
 
-        var receivers = new string[] { "+4790000001", "+4790000002" };
+        var receivers = new[] { "+4790000001", "+4790000002" };
 
         var response = await client.SendMessageToMultipleRecipients(msg, receivers);
 

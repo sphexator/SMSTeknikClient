@@ -6,6 +6,21 @@ namespace SMSTeknikClient.Messages;
 /// </summary>
 public class OutgoingSmsMessage
 {
+    public string? From { get; set; }
+
+    public string? To { get; set; }
+
+    public string? Body { get; set; }
+
+    public DateTimeOffset? SendAt { get; set; }
+
+    public string? StatusCallBackUrl { get; set; }
+
+
+    public OutgoingSmsMessage()
+    {
+    }
+
     public OutgoingSmsMessage(string @from, string to, string body, DateTimeOffset? sendAt = null, string? statusCallBackUrl = null)
     {
         To = to;
@@ -15,18 +30,6 @@ public class OutgoingSmsMessage
         StatusCallBackUrl = statusCallBackUrl;
     }
 
-    public OutgoingSmsMessage() : this("", "", "")
-    { }
-
-    public string From { get; set; }
-
-    public string To { get; set; }
-
-    public string Body { get; set; }
-
-    public DateTimeOffset? SendAt { get; set; }
-
-    public string? StatusCallBackUrl { get; set; }
 
     public OutgoingSmsMessage Clone() =>
         (OutgoingSmsMessage)MemberwiseClone();
