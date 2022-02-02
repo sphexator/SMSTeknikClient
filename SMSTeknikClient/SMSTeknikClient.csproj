@@ -6,6 +6,11 @@
         <AssemblyName>SmsTeknikClient</AssemblyName>
         <RootNamespace>SmsTeknikClient</RootNamespace>
         <TargetFramework>net6.0</TargetFramework>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageVersion>0.1.0</PackageVersion>
+        <Title>SmsTeknikClient</Title>
+        <Authors>SmsTeknik</Authors>
+        <PackageProjectUrl>https://github.com/SMSTeknik/</PackageProjectUrl>
     </PropertyGroup>
 
     <ItemGroup>
