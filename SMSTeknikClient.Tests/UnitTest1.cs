@@ -18,7 +18,7 @@ public class Tests
 
     public static IConfiguration InitConfiguration() =>
         new ConfigurationBuilder()
-            .AddJsonFile("appsettings.local.json", false)
+            .AddJsonFile("appsettings.local.json", true)
             .Build();
 
     private ISmsTeknikClient CreateClient() => SmsTeknik.CreateClient(_clientConfiguration);
@@ -36,6 +36,7 @@ public class Tests
     }
 
     [Test]
+    [Ignore("pls dont run this unless you know what you are doing :)")]
     public async Task TestSendSingleMessage()
     {
         var client = CreateClient();
