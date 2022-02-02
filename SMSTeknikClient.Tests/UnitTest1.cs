@@ -85,4 +85,14 @@ public class Tests
 
         IsTrue(messageParts == 2);
     }
+
+    [Test]
+    public async Task TestCheckCredits()
+    {
+        var client = CreateClient();
+
+        var credits = await client.CheckCredits();
+
+        IsTrue(credits >= 0);
+    }
 }

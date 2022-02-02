@@ -113,4 +113,19 @@ public class SmsTeknikXmlClient : ISmsTeknikClient
 
         return new SendResponse(messageResponses);
     }
+
+    public async Task<int> CheckCredits()
+    {
+        Client.DefaultRequestHeaders.Add("Authorization", $"Basic {Utils.Base64Encode($"{_config.Username}:{_config.Password}")}");
+
+        using var responseMessage = await Client.GetAsync("https://api.smsteknik.se/utilities/checkcredits/");
+        responseMessage.EnsureSuccessStatusCode();
+        var result = await responseMessage.Content.ReadAsStringAsync();
+
+        if (int.TryParse(result, out var parsedResult))
+            return parsedResult;
+        else
+            throw new Exception("No access");
+    }
+
 }

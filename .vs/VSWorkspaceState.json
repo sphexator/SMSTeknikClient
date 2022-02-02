@@ -1,6 +1,10 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\SMSTeknikClient",
+    "\\SMSTeknikClient.Tests",
+    "\\SMSTeknikClient\\ClientImplementation"
   ],
+  "SelectedNode": "\\SMSTeknikClient\\ClientImplementation\\Utils.cs",
   "PreviewInSolutionExplorer": false
 }

@@ -10,4 +10,5 @@ public interface ISmsTeknikClient : IDisposable
 {
     public Task<SendResponse> Send(SendRequest sendRequest);
     public Task<MessageResponse> Send(OutgoingSmsMessage sendRequest);
+    public Task<int> CheckCredits();
 }
