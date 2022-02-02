@@ -57,7 +57,7 @@ public class SmsTeknikXmlClient : ISmsTeknikClient
             new XE("udmessage", req.Body),
             xmlItems
         );
-
+ 
         if (!string.IsNullOrEmpty(req.StatusCallBackUrl))
             xml.Add(new XE("deliverystatustype", "3"),
                 new XE("deliverystatusaddress", req.StatusCallBackUrl));

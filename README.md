@@ -1,13 +1,10 @@
 # SMSTeknikClient
 
-
-
-Step 1: 
+Step 1:
 
 `nuget Install-Package SMSTeknikClient`
 
-
-Step 2: 
+Step 2:
 
 ```csharp
 var client = SmsTeknik.CreateClient(new Config.SmsTeknikConfiguration(myUserName, myPassword));
@@ -17,7 +14,8 @@ var msg = new OutgoingSmsMessage
     To = "+4790000001",
     From = "Test",
     Body = "Hello, World!",
-    // You can specify lots of other stuff here! See documentation for details. 
+    // You can specify other things here, like callback urls, scheduling etc! 
+    // See documentation for details. 
 };
 
 var response = await client.SendMessage(msg);
@@ -27,3 +25,6 @@ if(response.Success)
     Console.WriteLine($"Your message id {response.SmsId}");
 else
     Console.WriteLine($"Failed with reason: {response.ErrorMessage}");
+```
+
+See the unit tests for more complete examples. 
