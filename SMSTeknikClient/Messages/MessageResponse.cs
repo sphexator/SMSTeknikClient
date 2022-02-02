@@ -10,6 +10,6 @@ public record MessageResponse(OutgoingSmsMessage OutgoingSmsMessage, bool Succes
     /// </summary>
     public void EnsureSuccess()
     {
-        if (!Success) throw new AggregateException("One or more of the messages failed. Check the error message for details. ");
+        if (!Success) throw new AggregateException($"Send the sms failed. Error code = {ErrorMessage}");
     }
 }

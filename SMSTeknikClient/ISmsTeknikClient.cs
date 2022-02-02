@@ -8,10 +8,6 @@ namespace SMSTeknikClient;
 /// </summary>
 public interface ISmsTeknikClient : IDisposable
 {
-    public Task<MessageResponse> SendMessage(OutgoingSmsMessage message);
-    public Task<SendResponse> SendMessageToMultipleRecipients(OutgoingSmsMessage message, string[] toMultipleRecipients);
-
-    public Task<SendResponse> SendMessages(params OutgoingSmsMessage[] messages);
-
     public Task<SendResponse> Send(SendRequest sendRequest);
+    public Task<MessageResponse> Send(OutgoingSmsMessage sendRequest);
 }

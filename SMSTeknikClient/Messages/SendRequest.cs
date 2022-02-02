@@ -6,4 +6,13 @@ namespace SMSTeknikClient.Messages;
 ///
 /// Currently no other parameters are defined. 
 /// </summary>
-public record SendRequest(params OutgoingSmsMessage[] OutgoingSmsMessages);
+public record SendRequest(params OutgoingSmsMessage[] OutgoingSmsMessages)
+{
+    public static SendRequest FromMessage(OutgoingSmsMessage message) => 
+        new(message);
+
+    public static SendRequest ToMultipleRecipients(OutgoingSmsMessage message, string[] toMultipleRecipients) =>
+        new(toMultipleRecipients.Select(message.WithTo).ToArray());
+
+    // public Task<SendResponse> Send(params OutgoingSmsMessage[] messages);
+}

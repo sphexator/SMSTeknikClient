@@ -49,7 +49,7 @@ public class Tests
             // You can other stuff here! See documentation for details. 
         };
 
-        var response = await client.SendMessage(msg);
+        var response = await client.Send(msg);
         // You can check for status, delivery reports, failure details etc on the response
 
         IsTrue(response.Success, "response.Success" + "; Errors: " + response.ErrorMessage);
@@ -71,7 +71,7 @@ public class Tests
             // You can specify lots of other stuff here! See documentation for details. 
         };
 
-        var response = await client.SendMessageToMultipleRecipients(msg, recipients);
+        var response = await client.Send(SendRequest.ToMultipleRecipients(msg, recipients));
 
         IsTrue(response.Success);
         IsTrue(response.MessageResponses.Length == recipients.Length);

@@ -6,6 +6,8 @@ using static System.Globalization.CultureInfo;
 using static SMSTeknikClient.ClientImplementation.Validation;
 using XE = System.Xml.Linq.XElement;
 
+// ReSharper disable StringLiteralTypo
+
 namespace SMSTeknikClient.ClientImplementation;
 
 public class SmsTeknikXmlClient : ISmsTeknikClient
@@ -19,30 +21,33 @@ public class SmsTeknikXmlClient : ISmsTeknikClient
     void IDisposable.Dispose() =>
         GC.SuppressFinalize(this);
 
-    public async Task<MessageResponse> SendMessage(OutgoingSmsMessage message) =>
+    public async Task<MessageResponse> Send(OutgoingSmsMessage message) =>
         (await Send(new SendRequest(message))).MessageResponses.Single();
 
-    public Task<SendResponse> SendMessageToMultipleRecipients(OutgoingSmsMessage message, string[] toMultipleRecipients)
-    {
-        var l = toMultipleRecipients.Select(message.WithTo).ToArray();
-        return Send(new SendRequest(l));
-    }
-
-    public Task<SendResponse> SendMessages(params OutgoingSmsMessage[] messages) =>
-        Send(new SendRequest(messages));
-
-    [SuppressMessage("ReSharper", "StringLiteralTypo")]
     public async Task<SendResponse> Send(SendRequest sendRequest)
     {
         var validationErrors = GetValidationErrors(sendRequest);
         if (validationErrors.Any())
             throw new ArgumentException("Invalid SMS send request: " + string.Join(", ", validationErrors));
 
+        var xml = CreateXmlPayload(sendRequest);
+
+        Client.DefaultRequestHeaders.Add("Authorization", $"Basic {Utils.Base64Encode($"{_config.Username}:{_config.Password}")}");
+
+        using var content = new StringContent(xml.ToString(), Encoding.UTF8, "application/xml");
+        using var responseMessage = await Client.PostAsync("https://api.smsteknik.se/send/xml/", content);
+        responseMessage.EnsureSuccessStatusCode();
+        var result = await responseMessage.Content.ReadAsStringAsync();
+        return ParseResult(result, sendRequest.OutgoingSmsMessages);
+    }
+
+    private XE CreateXmlPayload(SendRequest sendRequest)
+    {
         XE xmlItems = new XE("items");
 
         var req = sendRequest.OutgoingSmsMessages.First();
 
-        var xml = new XE("sms-teknik",
+         var xml = new XE("sms-teknik",
             new XE("operationtype", 0),
             new XE("smssender", req.From),
             new XE("multisms", 1),
@@ -58,14 +63,7 @@ public class SmsTeknikXmlClient : ISmsTeknikClient
                 new XE("deliverystatusaddress", req.StatusCallBackUrl));
 
         xmlItems.Add(sendRequest.OutgoingSmsMessages.Select(outgoingMessage => new XE("recipient", new XE("nr", outgoingMessage.To))));
-
-        Client.DefaultRequestHeaders.Add("Authorization", $"Basic {Utils.Base64Encode($"{_config.Username}:{_config.Password}")}");
-
-        using var content = new StringContent(xml.ToString(), Encoding.UTF8, "application/xml");
-        using var responseMessage = await Client.PostAsync("https://api.smsteknik.se/send/xml/", content);
-        responseMessage.EnsureSuccessStatusCode();
-        var result = await responseMessage.Content.ReadAsStringAsync();
-        return ParseResult(result, sendRequest.OutgoingSmsMessages);
+        return xml;
     }
 
 
