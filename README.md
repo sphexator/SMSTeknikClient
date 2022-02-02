@@ -1,5 +1,8 @@
 # SMSTeknikClient
 
+This is a client library for SMSTeknik SMS Gateway. 
+
+
 Step 1:
 
 `nuget Install-Package SMSTeknikClient`
