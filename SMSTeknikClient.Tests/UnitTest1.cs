@@ -88,6 +88,7 @@ public class Tests
     }
 
     [Test]
+    [Ignore("pls dont run this unless you know what you are doing :)")]
     public async Task TestCheckCredits()
     {
         var client = CreateClient();
