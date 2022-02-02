@@ -7,7 +7,7 @@ Step 1:
 Step 2:
 
 ```csharp
-var client = SmsTeknik.CreateClient(new Config.SmsTeknikConfiguration(myUserName, myPassword));
+var client = SmsTeknik.CreateClient(new SmsTeknikConfiguration(myUserName, myPassword));
         
 var msg = new OutgoingSmsMessage
 {
@@ -18,11 +18,11 @@ var msg = new OutgoingSmsMessage
     // See documentation for details. 
 };
 
-var response = await client.SendMessage(msg);
+var response = await client.Send(msg);
 
 // You can check for status, delivery reports, failure details etc on the response
 if(response.Success)
-    Console.WriteLine($"Your message id {response.SmsId}");
+    Console.WriteLine($"Your message was sent successfully! Message id: {response.SmsId}");
 else
     Console.WriteLine($"Failed with reason: {response.ErrorMessage}");
 ```
