@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using SMSTeknikClient.Config;
 using SMSTeknikClient.Messages;
