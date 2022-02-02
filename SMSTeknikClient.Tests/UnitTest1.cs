@@ -1,10 +1,10 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
 using SMSTeknikClient.Config;
 using SMSTeknikClient.Messages;
+using SMSTeknikClient.Tests.Config;
 using static NUnit.Framework.Assert;
 
 namespace SMSTeknikClient.Tests;
@@ -13,30 +13,40 @@ public class Tests
 {
     private IConfiguration _configuration = null!;
 
+    private SmsTeknikConfiguration? _clientConfiguration;
+    private TestConfiguration? _testConfiguration;
+
     public static IConfiguration InitConfiguration() =>
         new ConfigurationBuilder()
             .AddJsonFile("appsettings.local.json", false)
             .Build();
 
-    private ISmsTeknikClient CreateClient() => SmsTeknik.CreateClient(new SmsTeknikConfiguration(
-        _configuration["username"], _configuration["password"]));
+    private ISmsTeknikClient CreateClient() => SmsTeknik.CreateClient(_clientConfiguration);
 
     [SetUp]
-    public void Setup() => _configuration = InitConfiguration();
+    public void Setup()
+    {
+        _configuration = InitConfiguration();
+
+        _clientConfiguration = new SmsTeknikConfiguration();
+        _configuration.Bind(nameof(SmsTeknik), _clientConfiguration);
+
+        _testConfiguration = new TestConfiguration();
+        _configuration.Bind(nameof(TestConfiguration), _testConfiguration);
+    }
 
     [Test]
     public async Task TestSendSingleMessage()
     {
         var client = CreateClient();
-        var recipients = _configuration.GetSection("to").Get<IList<string>>();
 
         // TODO: Load actual test configuration from a non-git-committed file. 
         var msg = new OutgoingSmsMessage
         {
-            To = recipients.First(),
-            From = _configuration["from"],
+            To = _testConfiguration.Recipients.First(),
+            From = _testConfiguration.From,
             Body = "Hello, World!",
-            // You can specify lots of other stuff here! See documentation for details. 
+            // You can other stuff here! See documentation for details. 
         };
 
         var response = await client.SendMessage(msg);
@@ -48,6 +58,7 @@ public class Tests
     }
 
     [Test]
+    [Ignore("pls dont run this unless you know what you are doing :)")]
     public async Task TestSendMultipleMessages()
     {
         var client = CreateClient();
