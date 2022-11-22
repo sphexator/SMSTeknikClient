@@ -15,7 +15,11 @@ public class SmsTeknikXmlClient : ISmsTeknikClient
 
     private readonly SmsTeknikConfiguration _config;
 
-    public SmsTeknikXmlClient(SmsTeknikConfiguration config) => _config = config;
+    public SmsTeknikXmlClient(SmsTeknikConfiguration config)
+    {
+        _config = config;
+        Client.DefaultRequestHeaders.Add("Authorization", $"Basic {Utils.Base64Encode($"{_config.Username}:{_config.Password}")}");
+    }
 
     void IDisposable.Dispose() =>
         GC.SuppressFinalize(this);
@@ -30,8 +34,6 @@ public class SmsTeknikXmlClient : ISmsTeknikClient
             throw new ArgumentException("Invalid SMS send request: " + string.Join(", ", validationErrors));
 
         var xml = CreateXmlPayload(sendRequest);
-
-        Client.DefaultRequestHeaders.Add("Authorization", $"Basic {Utils.Base64Encode($"{_config.Username}:{_config.Password}")}");
 
         using var content = new StringContent(xml.ToString(), Encoding.UTF8, "application/xml");
         using var responseMessage = await Client.PostAsync("https://api.smsteknik.se/send/xml/", content);
@@ -115,8 +117,6 @@ public class SmsTeknikXmlClient : ISmsTeknikClient
 
     public async Task<int> CheckCredits()
     {
-        Client.DefaultRequestHeaders.Add("Authorization", $"Basic {Utils.Base64Encode($"{_config.Username}:{_config.Password}")}");
-
         using var responseMessage = await Client.GetAsync("https://api.smsteknik.se/utilities/checkcredits/");
         responseMessage.EnsureSuccessStatusCode();
         var result = await responseMessage.Content.ReadAsStringAsync();
