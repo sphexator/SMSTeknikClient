@@ -12,7 +12,6 @@ namespace SMSTeknikClient.ClientImplementation;
 public class SmsTeknikXmlClient : ISmsTeknikClient
 {
     private static readonly HttpClient Client = new();
-
     private readonly SmsTeknikConfiguration _config;
 
     public SmsTeknikXmlClient(SmsTeknikConfiguration config)
@@ -24,9 +23,11 @@ public class SmsTeknikXmlClient : ISmsTeknikClient
     void IDisposable.Dispose() =>
         GC.SuppressFinalize(this);
 
+    /// <inheritdoc />
     public async Task<MessageResponse> Send(OutgoingSmsMessage message) =>
         (await Send(new SendRequest(message))).MessageResponses.Single();
 
+    /// <inheritdoc />
     public async Task<SendResponse> Send(SendRequest sendRequest)
     {
         var validationErrors = GetValidationErrors(sendRequest);
@@ -79,7 +80,7 @@ public class SmsTeknikXmlClient : ISmsTeknikClient
             // We have two options: 1) throw exception, or 2) populate the same error message for each of the message response.
             // This scenario only applies when sending to multiple receivers.
             // Example error codes: 0:Access denied, 0:No Valid recipients
-            var errorCode = arrResult.Single()[2..];
+            var errorCode = arrResult.Single().Remove(0, 2);
             throw new Exception("Error: " + errorCode);
         }
 
@@ -100,7 +101,7 @@ public class SmsTeknikXmlClient : ISmsTeknikClient
             {
                 // Error
                 success = false;
-                errorMessage = resultItem[2..];
+                errorMessage = resultItem.Remove(0, 2);
             }
             else
             {
@@ -115,6 +116,7 @@ public class SmsTeknikXmlClient : ISmsTeknikClient
         return new SendResponse(messageResponses);
     }
 
+    /// <inheritdoc />
     public async Task<int> CheckCredits()
     {
         using var responseMessage = await Client.GetAsync("https://api.smsteknik.se/utilities/checkcredits/");

@@ -8,6 +8,6 @@ namespace SMSTeknikClient.Config;
 /// </summary>
 public class SmsTeknikConfiguration
 {
-    public string Password { get; init; }
-    public string Username { get; init; }
+    public string Password { get; set; }
+    public string Username { get; set; }
 }

@@ -4,13 +4,13 @@ namespace SMSTeknikClient.Messages;
 /// This class represent a single SMS message, with
 /// a single recipient. 
 /// </summary>
-public record OutgoingSmsMessage
+public struct OutgoingSmsMessage
 {
-    public string? From { get; init; }
+    public string? From { get; set; }
 
-    public string? To { get; init; }
+    public string? To { get; set; }
 
-    public string? Body { get; init; }
+    public string? Body { get; set; }
 
     public DateTimeOffset? SendAt { get; set; }
 

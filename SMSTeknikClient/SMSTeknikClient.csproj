@@ -10,7 +10,8 @@
         <Title>SmsTeknikClient</Title>
         <Authors>SmsTeknik</Authors>
         <PackageProjectUrl>https://github.com/SMSTeknik/</PackageProjectUrl>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <LangVersion>preview</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
