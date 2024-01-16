@@ -14,11 +14,11 @@ public static class Utils
     /// <returns>Number of chars</returns>
     public static int CalculateMessageLength(string body)
     {
-        var doubleChars = new char[] { '^', '\\', '{', '}', '[', ']', '~', '|', '�', '\n' };
+        var doubleChars = new[] { '^', '\\', '{', '}', '[', ']', '~', '|', '�', '\n' };
 
-        int count = 0;
+        var count = 0;
 
-        foreach (char c in body.ToCharArray())
+        foreach (var c in body)
         {
             if (doubleChars.Contains(c))
                 count++;
@@ -30,15 +30,14 @@ public static class Utils
     }
 
     /// <summary>
-    /// Calculates the number of message parts (segments) for your text message. Assuming GSM7 (7-bit encoding). The number of message parts influences your messaging cost.
+    /// Calculates the number of message parts (segments) for your text message. Assuming GSM7 (7-bit encoding).
+    /// The number of message parts influences your messaging cost.
     /// </summary>
     /// <param name="body"></param>
     /// <returns>Number of message parts (segments)</returns>
     public static int CalculateMessageParts(string body)
     {
         var len = CalculateMessageLength(body);
-
         return (len <= 160 ? 1 : (int)Math.Ceiling(len / 153m));
     }
-
 }
