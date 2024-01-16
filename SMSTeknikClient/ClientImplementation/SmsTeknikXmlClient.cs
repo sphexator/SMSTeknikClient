@@ -9,6 +9,7 @@ using XE = System.Xml.Linq.XElement;
 
 namespace SMSTeknikClient.ClientImplementation;
 
+/// <inheritdoc />
 public class SmsTeknikXmlClient : ISmsTeknikClient
 {
     private static readonly HttpClient Client = new();

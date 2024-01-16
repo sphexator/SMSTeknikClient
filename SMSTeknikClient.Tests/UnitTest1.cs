@@ -44,7 +44,7 @@ public class Tests
         // TODO: Load actual test configuration from a non-git-committed file. 
         var msg = new OutgoingSmsMessage
         {
-            To = _testConfiguration.Recipients.FirstOrDefault(),
+            To = _testConfiguration.Recipients.First(),
             From = _testConfiguration.From,
             Body = "Hello, World!",
             // You can other stuff here! See documentation for details. 

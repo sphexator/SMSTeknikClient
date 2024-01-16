@@ -2,7 +2,7 @@ using System.Text;
 
 namespace SMSTeknikClient.ClientImplementation;
 
-public class Utils
+public static class Utils
 {
     public static string Base64Encode(string textToEncode) => 
         Convert.ToBase64String(Encoding.UTF8.GetBytes(textToEncode));
@@ -14,7 +14,7 @@ public class Utils
     /// <returns>Number of chars</returns>
     public static int CalculateMessageLength(string body)
     {
-        var doubleChars = new char[] { '^', '\\', '{', '}', '[', ']', '~', '|', '€', '\n' };
+        var doubleChars = new char[] { '^', '\\', '{', '}', '[', ']', '~', '|', 'ï¿½', '\n' };
 
         int count = 0;
 
